@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drinks minigame</title>
+    <script src="https://kit.fontawesome.com/cbcc2cb107.js" crossorigin="anonymous"></script>
+   <style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto&family=Silkscreen&family=Tektur:wght@500&family=Ubuntu&display=swap');
+</style>
+    <style>
+        :root {
+            --branco: #EDE6B8;
+            --preto:#52474D;
+            --azul: #82BCAE;
+        }
+        #relleno {
+            transition: 0.3s;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 0%;
+            background: var(--azul);
+            animation: olasAnimacion 2s infinite linear;
+        }
+        body{
+            font-family: Ubuntu;
+            background: var(--branco);
+            text-align: center;
+            color: var(--preto);
+        }
+        .score {
+            position: absolute;
+            left: 50%; bottom: 20%;
+  transform: translateX(-50%);
+        }
+        #rellenar {
+            color: var(--preto);
+            margin-top: 5%;
+            font-size: 36px;
+            transition: 0.3s;
+            z-index:1;
+        }
+        @media(max-width: 600px){
+            #rellenar {
+                margin-top: 20%;
+            }
+        }
+        #rellenar:hover {
+            transform: scale(1.2);
+        }
+        #vaso {
+            border: 6px solid var(--preto);
+            position: relative;
+            border-top: 6px solid transparent;
+            width: 120px;
+            height: 170px;
+            margin: 0;
+            border-radius: 0px 0px 5% 5%;
+        }
+        #barra {
+            border-top: 6px dashed var(--preto);
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 30%;
+            z-index: 1;
+            transition: 0.3s;
+        }
+        .centrar {
+            display: flex;
+            justify-content: center;
+        }
+        @keyframes olasAnimacion {
+      0%, 100% {
+        border-radius: 20% 20% 0 0;
+      }
+      50% {
+        border-radius: 0 0 0 0;
+      }
+    }
+    
+    .agua {
+        background: var(--azul);
+        position: absolute; 
+        left: 50%; bottom: 0;
+  transform: translateX(-50%);
+        width: 20px;
+        height: 300%;
+        animation: apa 0.4s linear;
+        z-index:-5;
+        display: none;
+    }
+    @keyframes apa {
+        0%{height: 0px;}
+        100%{height: 300px;}
+    }
+    @keyframes pepe {
+        0%{height: 300px;}
+        100%{height: 0px;}
+    }
+    #feli {
+        position: absolute;
+        left: 150px; top: 20%;
+        font-size: 60px;
+        opacity: 0; color: #F3B167;
+        animation: bien 1.5s ease-out;
+        display: none;
+        z-index: 99; 
+    }
+    .ganar {
+        animation: sumar 0.5s ease-out;
+    }
+    .mal {
+        animation: error 0.5s ease-out;
+    }
+    @keyframes sumar {
+        0%{transform: scale(1.0);}
+        70%{transform: scale(1.3);}
+        100%{transform: scale(1.0);}
+    }
+    @keyframes error {
+        0%{transform: scale(1.0);}
+        70%{transform: scale(0.7); color:#F26665;}
+        100%{transform: scale(1.0); color: var(--preto);}
+    }
+    @keyframes bien {
+        0%{transform: scale(0.1); rotate: 0deg; opacity: 1;}
+        100%{transform: scale(2.0); rotate: 360deg; opacity: 0;}
+    }
+    #cumpli {
+        width: 80%;
+        margin: auto;
+    }
+    </style>
+</head>
+<body>
+    <br>
+    
+    <!-- boton de rellenado -->
+    <i id="rellenar" class="fas fa-caret-down"></i>
+    <br>
+    
+    <!-- vaso, relleno y punteado -->
+    <div class="centrar">
+        <div id="vaso">
+           <div id="barra"></div>
+           <div id="relleno"></div>
+            <!-- flujo de.agua -->
+            <div id="agua" class="agua">
+    </div>
+        </div>
+    </div>
+    <br><br>
+    
+    <!-- puntos -->
+    <h1 id="score">
+        0
+    </h1> 
+    <!-- cumplidos -->
+    <h5 id="cumpli">
+        Press the triangle on top of the glass to fill it with water as far as it indicates. Press anywhere else to stop pouring the liquid.
+    </h5>
+    
+    
+    <!-- estrella y x -->
+<i class="fas fa-star" id="feli"></i>
+
+    <script>
+        var score = 0;
+        var rellenar = document.getElementById('rellenar');
+        var feli = document.getElementById('feli');
+         var agua = document.getElementById('agua');
+        var vaso = document.getElementById('vaso');
+        var relleno = document.getElementById('relleno');
+        var barra = document.getElementById('barra');
+        var cumpli = document.getElementById('cumpli');
+        var mostrarscore = document.getElementById('score');
+        var random = Math.floor(Math.random() * (90 - 10 + 1)) + 10;
+        
+        function bar(){
+            random = Math.floor(Math.random() * (90 - 10 + 1)) + 10;
+            barra.style.height = `${random}%`;
+        }
+        
+        var velocidad = 0.2;
+        bar();
+        
+        var cantidad = 0;
+        
+        var intervalId;
+
+rellenar.addEventListener("mouseenter", function() {
+rellenar.className = "fas fa-caret-up";
+agua.style.display = 'block';
+agua.style.animation = 'apa 0.2s linear';
+    intervalId = setInterval(function() {
+        if(cantidad < 96) {
+            cantidad = cantidad + velocidad;
+        }else {
+            cantidad = cantidad
+        }
+        relleno.style.height = `${cantidad}%`;
+    }, 25);
+});
+
+rellenar.addEventListener("mouseleave", function() {
+    clearInterval(intervalId);
+    rellenar.className = "fas fa-caret-down";
+    if(velocidad < 5) {
+        velocidad += 0.04;
+    }
+    agua.style.animation = 'pepe 0.41s linear';
+    setTimeout(()=>{
+        comprobar()
+        agua.style.display = 'none';
+    },400)
+});
+
+function comprobar() {
+    porcentaje = ((cantidad / random) * 100).toFixed(0);
+    
+    if(porcentaje > 90 && porcentaje <  131) {
+        cumpli.textContent = `Excellent work ! +4`;
+        score = score + 4;
+        mostrarscore.textContent = score;
+    }else if(porcentaje > 70 && porcentaje < 91){
+        score = score + 2;
+        mostrarscore.textContent = score;
+        cumpli.textContent = `good!  +2`;
+    } else if(porcentaje > 50 && porcentaje < 71){
+        cumpli.textContent = `You were close ! +0`;
+    } else if(porcentaje > 30 && porcentaje < 51){
+        if(score > 0) {
+            score = score - 1;
+        }
+        mostrarscore.textContent = score;
+        cumpli.textContent = `Make him want! -1`;
+    } else if(porcentaje > 20 && porcentaje < 31){
+        if(score > 1) {
+            score = score - 2;
+        }
+        mostrarscore.textContent = score;
+        cumpli.textContent = `there is! that hurt -2`;
+    } else {
+    
+       if(porcentaje > 159) {
+          cumpli.textContent = `You exaggerated too much! -4`;
+          if(score > 3) {
+            score = score - 4;
+           }
+       }else if(porcentaje > 130 && porcentaje < 160){
+        cumpli.textContent = `I think you exaggerated a little! -2`;
+        if(score > 1) {
+            score = score - 2;
+           }
+       } else {
+           cumpli.textContent = `I think it is very little! -4`;
+           if(score > 3) {
+            score = score - 4;
+           }
+       }
+        mostrarscore.textContent = score;
+    }
+    
+    var alea = Math.floor(Math.random() * (70 - 10 + 1)) + 10;
+    
+    if(porcentaje > 90 && porcentaje < 130) {
+        feli.className = 'fas fa-star';
+        feli.style.display = 'block';
+        feli.style.left = alea + '%';
+        feli.style.color = '#F3B167';
+        anima();
+    }else if (porcentaje > 50 && porcentaje < 91){
+    
+    } else {
+        feli.className = 'fas fa-frown';
+        feli.style.display = 'block';
+        feli.style.left = alea + '%';
+        feli.style.color = '#F26665';
+        mal();
+    }
+    tiem();
+    cantidad=0;
+    relleno.style.height = `0%`;
+    bar();
+}
+
+function tiem(){
+    setTimeout(()=>{
+        feli.style.display = 'none';
+    },1450)
+}
+
+function anima() {
+  mostrarscore.classList.add("ganar");
+  setTimeout(function() {
+    mostrarscore.classList.remove("ganar");
+  }, 480);
+}
+function mal() {
+  mostrarscore.classList.add("mal");
+  setTimeout(function() {
+    mostrarscore.classList.remove("mal");
+  }, 480);
+}
+
+    </script>
+</body>
+</html>
